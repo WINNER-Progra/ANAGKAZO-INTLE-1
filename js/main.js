@@ -65,6 +65,23 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Stats: slide up + fade in when scrolled into view
+  var stats = document.querySelectorAll('.stat');
+  if (stats.length && 'IntersectionObserver' in window) {
+    var statsObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          statsObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    stats.forEach(function (stat) { statsObserver.observe(stat); });
+  } else {
+    // Fallback: if IntersectionObserver isn't supported, just show them
+    stats.forEach(function (stat) { stat.classList.add('in-view'); });
+  }
+
   // Quote form submission (EmailJS)
   var quoteForm = document.getElementById('quote-form');
   if (quoteForm && window.emailjs) {
@@ -103,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var mapVisual = document.getElementById('map-visual');
   var tooltip = document.getElementById('map-tooltip');
   if (mapVisual && tooltip) {
-    var points = mapVisual.querySelectorAll('.map-point');
+    var points = mapVisual.querySelectorAll('.commune-point');
     points.forEach(function (point) {
       point.addEventListener('mouseenter', function (e) {
         var label = point.getAttribute('data-label');
@@ -121,4 +138,4 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
-    
+     
